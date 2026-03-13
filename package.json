@@ -12,31 +12,14 @@
   "activationEvents": ["onStartupFinished"],
   "main": "./dist/extension.js",
   "contributes": {
-     "taskDefinitions": [
+    "taskDefinitions": [
       {
-        "type": "shell",
-        "required": [],
+        "type": "logz-wrapper",
+        "required": ["wrappedTask"],
         "properties": {
-          "logz": {
-            "type": "object",
-            "description": "Configuration for Logz logging panel",
-            "properties": {
-              "enable": {
-                "type": "boolean",
-                "default": false,
-                "description": "Enable streaming logs to the Logz panel"
-              },
-              "port": {
-                "type": "number",
-                "default": 5555,
-                "description": "TCP port used by the Logz socket server"
-              },
-              "openPanel": {
-                "type": "boolean",
-                "default": true,
-                "description": "Automatically open the Logz panel when the task starts"
-              }
-            }
+          "wrappedTask": {
+            "type": "string",
+            "description": "Label of the task to wrap"
           }
         }
       }

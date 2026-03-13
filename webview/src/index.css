@@ -38,22 +38,6 @@
 
 .codicon-info:before { content: "\ea74" }
 
-.log-color-debug {
-    color: var(--vscode-debugConsole-infoForeground);
-}   
-
-.log-color-error {
-    color: var(--vscode-debugConsole-errorForeground);
-}
-
-.log-color-info {
-    color: var(--vscode-debugConsole-sourceForeground);
-}
-
-.log-color-warning {
-    color: var(--vscode-debugConsole-warningForeground);
-}
-
 .log-hover-debug:hover {
     background: color-mix(in srgb, var(--vscode-debugConsole-infoForeground) 12%, transparent);
 }

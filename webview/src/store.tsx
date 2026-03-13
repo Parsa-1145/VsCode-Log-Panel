@@ -30,7 +30,7 @@ const logs: Log[] = [
     message: "Token validation succeeded for user id=4821",
     time: "10:01:11",
     group: "auth",
-    level: "DEBUG"
+    level: "WARNING"
   },
   {
     message: "Fetching user profile from database",

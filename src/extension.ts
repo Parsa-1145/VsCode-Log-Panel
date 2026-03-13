@@ -1,61 +1,23 @@
 import * as vscode from 'vscode';
-
+import LogViewProvider from './webview';
+import LogzWrapTaskProvider from './taskProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Logz Panel Extension is now active!');
-
-    const provider: vscode.WebviewViewProvider = {
-        resolveWebviewView: (webviewView: vscode.WebviewView, resolveContext: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) => {
-            
-            // 1. Configure the Webview options
-            webviewView.webview.options = {
-                enableScripts: true,
-                localResourceRoots: [
-                    vscode.Uri.joinPath(context.extensionUri, 'out', 'webview')
-                ]
-            };
-
-            
-
-            // 2. Set the HTML content
-            webviewView.webview.html = getWebviewContent(webviewView.webview, context.extensionUri);
-        }
-    };
-
-    // 3. Register the provider
+    const logViewProvider = new LogViewProvider(context.extensionUri);
     vscode.window.registerWebviewViewProvider(
         "logzPanelView",
-        provider,
+        logViewProvider,
         {
             webviewOptions: {
-                retainContextWhenHidden: false
+                retainContextWhenHidden: true
             }
         }
     );
 
-    console.log(vscode.window.terminals);
+    const logzWrapTaskProvider = new LogzWrapTaskProvider(logViewProvider);
+    context.subscriptions.push(
+        vscode.tasks.registerTaskProvider("logz-wrapper", logzWrapTaskProvider)
+    );
 }
 
-// Helper function to generate HTML
-function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): string {
-    const webviewPathOnDisk = vscode.Uri.joinPath(extensionUri, 'out', 'webview');
-    const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(webviewPathOnDisk, 'index.js'));
-    const stylesUri = webview.asWebviewUri(vscode.Uri.joinPath(webviewPathOnDisk, 'index.css'));
-
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Logz Panel</title>
-    <link rel="stylesheet" type="text/css" href="${stylesUri}">
-</head>
-<body>
-    <div id="root"></div>
-    <script type="module" src="${scriptUri}"></script>
-</body>
-</html>`;
-}
-
-export function deactivate() {}
+export function deactivate() { }
