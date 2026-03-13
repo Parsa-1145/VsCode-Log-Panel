@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+
+@font-face {
+    font-family: "codicon";
+    src: url("./codicon.ttf") format("truetype");
+    font-display: block;
+}
+
+.codicon[class*='codicon-'] {
+	font: normal normal normal 16px/1 codicon;
+	display: inline-block;
+	text-decoration: none;
+	text-rendering: auto;
+	text-align: center;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+
+/* Icons you actually use */
+.codicon-add::before {
+    content: "\ea60";
+}
+
+.codicon-debug:before { content: "\ead8" }
+
+.codicon-warning::before {
+    content: "\ea6c";
+}
+
+.codicon-error::before {
+    content: "\ea87";
+}
+
+.codicon-info:before { content: "\ea74" }
+
+.log-color-debug {
+    color: var(--vscode-debugConsole-infoForeground);
+}   
+
+.log-color-error {
+    color: var(--vscode-debugConsole-errorForeground);
+}
+
+.log-color-info {
+    color: var(--vscode-debugConsole-sourceForeground);
+}
+
+.log-color-warning {
+    color: var(--vscode-debugConsole-warningForeground);
+}
+
+.log-hover-debug:hover {
+    background: color-mix(in srgb, var(--vscode-debugConsole-infoForeground) 12%, transparent);
+}
+
+.log-hover-error:hover {
+    background: color-mix(in srgb, var(--vscode-debugConsole-errorForeground) 12%, transparent);
+}
+
+.log-hover-info:hover {
+    background: color-mix(in srgb, var(--vscode-debugConsole-sourceForeground) 12%, transparent);
+}
+
+.log-hover-warning:hover {
+    background: color-mix(in srgb, var(--vscode-debugConsole-warningForeground) 12%, transparent);
+}

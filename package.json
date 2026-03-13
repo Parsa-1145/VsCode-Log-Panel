@@ -1,0 +1,83 @@
+{
+  "name": "logz-panel",
+  "displayName": "LogZ Panel",
+  "description": "Adds a panel to view logz logs",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.103.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./dist/extension.js",
+  "contributes": {
+     "taskDefinitions": [
+      {
+        "type": "shell",
+        "required": [],
+        "properties": {
+          "logz": {
+            "type": "object",
+            "description": "Configuration for Logz logging panel",
+            "properties": {
+              "enable": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enable streaming logs to the Logz panel"
+              },
+              "port": {
+                "type": "number",
+                "default": 5555,
+                "description": "TCP port used by the Logz socket server"
+              },
+              "openPanel": {
+                "type": "boolean",
+                "default": true,
+                "description": "Automatically open the Logz panel when the task starts"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "viewsContainers": {
+      "panel": [
+        { "id": "logzPanel", "title": "Logs", "icon": "media/icon.svg"}
+      ]
+    },
+    "views": {
+      "logzPanel": [
+        { "id": "logzPanelView", "name": "Log Stream", "type": "webview"}
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:tsc": "tsc --watch --project tsconfig.json",
+    "watch:webview": "cd webview && npm run build -- --watch",
+    "dev": "concurrently \"npm run watch\" \"npm run watch:webview\"",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.103.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1"
+  }
+}
