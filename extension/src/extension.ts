@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
         logViewProvider,
         {
             webviewOptions: {
-                retainContextWhenHidden: true
+                retainContextWhenHidden: false
             }
         }
     );

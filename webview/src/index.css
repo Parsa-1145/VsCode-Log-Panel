@@ -8,26 +8,47 @@
 }
 
 .codicon[class*='codicon-'] {
-	font: normal normal normal 16px/1 codicon;
-	display: inline-block;
-	text-decoration: none;
-	text-rendering: auto;
-	text-align: center;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
+    font: 16px / 1 codicon;
+    display: inline-block;
+    text-decoration: none;
+    text-rendering: auto;
+    text-align: center;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    -webkit-user-select: none;
 }
-
 
 /* Icons you actually use */
-.codicon-add::before {
-    content: "\ea60";
+.codicon-debug::before {
+    content: "\ead8"
 }
 
-.codicon-debug:before { content: "\ead8" }
+@keyframes codicon-spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
+.codicon-loading::before {
+    content: "\eb19";
+    animation: codicon-spin 1.5s linear infinite;
+    display: inline-block;
+}
+
+.codicon-terminal::before {
+    content: "\ea85"
+}
+.codicon-trash::before {
+    content: "\ea81"
+}
+.codicon-pass::before {
+    content: "\eba4"
+}
+.codicon-terminal-kill::before {
+    content: "\ea81"
+}
 .codicon-warning::before {
     content: "\ea6c";
 }
@@ -36,7 +57,11 @@
     content: "\ea87";
 }
 
-.codicon-info:before { content: "\ea74" }
+.codicon-info:before {
+    content: "\ea74"
+}
+.codicon-debug-stop:before { content: "\ead7" }
+.codicon-refresh:before { content: "\eb37" }
 
 .log-hover-debug:hover {
     background: color-mix(in srgb, var(--vscode-debugConsole-infoForeground) 12%, transparent);
@@ -52,4 +77,150 @@
 
 .log-hover-warning:hover {
     background: color-mix(in srgb, var(--vscode-debugConsole-warningForeground) 12%, transparent);
+}
+
+/* -----------------------LISTS----------------------- */
+
+.log-page-tabs:focus .log-page-tabs-row.focused {
+    background-color: var(--vscode-list-focusBackground);
+}
+
+.log-page-tabs:focus .log-page-tabs-row.focused:hover {
+    background-color: var(--vscode-list-focusBackground);
+}
+
+.log-page-tabs:focus .log-page-tabs-row.focused.selected {
+    outline: 1px solid var(--vscode-list-focusAndSelectionOutline, var(--vscode-contrastActiveBorder, var(--vscode-list-focusOutline)));
+    outline-offset: -1px;
+}
+
+.log-page-tabs:focus .log-page-tabs-row.focused {
+    color: var(--vscode-list-focusForeground);
+}
+
+.log-page-tabs .log-page-tabs-row.selected::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--vscode-terminal-tab-activeBorder, var(--vscode-focusBorder));
+}
+
+.log-page-tabs { 
+    width: 100%;
+    overflow-x: hidden;
+}
+.log-page-tabs .log-page-tabs-row {
+    position: relative;
+    height: 22px;
+    line-height: 22px;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    cursor: pointer;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.log-page-tabs .log-page-tabs-row .label-icon .codicon {
+    vertical-align: text-bottom;
+    margin-right: 0.25rem;
+    min-width: 0; 
+}
+.log-page-tabs .log-page-tabs-row .label-icon {
+    min-width: 0;              /* CRITICAL */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+}
+.log-page-tabs .log-page-tabs-row:hover .page-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+.log-page-tabs .log-page-tabs-row .page-actions {
+    height: 22px;
+    display: none;
+    min-height: 0;
+    border: 0;
+    outline: 0;
+    padding: 1px;
+    box-sizing: border-box;
+}
+.log-page-tabs-row .page-actions .page-action{
+    border-radius: 5px;
+    padding: 2px;
+}
+.log-page-tabs-row .page-actions .page-action:hover{
+    background: var(--vscode-toolbar-hoverBackground);
+}
+.log-page-tabs:focus .log-page-tabs-row.selected {
+    background-color: var(--vscode-list-activeSelectionBackground);
+}
+
+.log-page-tabs:focus .log-page-tabs-row.selected:hover {
+    background-color: var(--vscode-list-activeSelectionBackground);
+}
+
+.log-page-tabs:focus .log-page-tabs-row.selected {
+    color: var(--vscode-list-activeSelectionForeground);
+}
+
+.log-page-tabs:focus .log-page-tabs-row.selected .codicon {
+    color: var(--vscode-list-activeSelectionIconForeground);
+}
+
+.log-page-tabs .log-page-tabs-row.focused .codicon {
+    color: var(--vscode-list-inactiveSelectionIconForeground);
+}
+
+.log-page-tabs .log-page-tabs-row.focused {
+    background-color: var(--vscode-list-inactiveFocusBackground);
+}
+
+.log-page-tabs .log-page-tabs-row.focused:hover {
+    background-color: var(--vscode-list-inactiveFocusBackground);
+}
+
+.log-page-tabs .log-page-tabs-row.selected {
+    background-color: var(--vscode-list-inactiveSelectionBackground);
+}
+
+.log-page-tabs .log-page-tabs-row.selected:hover {
+    background-color: var(--vscode-list-inactiveSelectionBackground);
+}
+
+.log-page-tabs .log-page-tabs-row.selected {
+    color: var(--vscode-list-inactiveSelectionForeground);
+}
+
+.log-page-tabs .log-page-tabs-row.focused.selected {
+    outline: 1px dotted var(--vscode-contrastActiveBorder, var(--vscode-list-inactiveFocusOutline));
+    outline-offset: -1px;
+}
+
+.log-page-tabs .log-page-tabs-row.selected {
+    outline: 1px dotted var(--vscode-contrastActiveBorder);
+    outline-offset: -1px;
+}
+
+.log-page-tabs .log-page-tabs-row.focused {
+    outline: 1px dotted var(--vscode-list-inactiveFocusOutline);
+    outline-offset: -1px;
+}
+
+.log-page-tabs .log-page-tabs-row:hover {
+    outline: 1px dashed var(--vscode-contrastActiveBorder);
+    outline-offset: -1px;
+}
+
+
+.log-page-tabs .log-page-tabs-row:not(.focused):not(.selected):hover {
+    background-color: var(--vscode-list-hoverBackground);
 }

@@ -1,7 +1,9 @@
+import { ExtensionCommand, LogPage, WebviewCommand } from '@logz/shared';
 import * as vscode from 'vscode';
+import { logPageManager } from './common';
 
 function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): string {
-    const webviewPathOnDisk = vscode.Uri.joinPath(extensionUri, 'out', 'webview');
+    const webviewPathOnDisk = vscode.Uri.joinPath(extensionUri, 'dist', 'webview');
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(webviewPathOnDisk, 'index.js'));
     const stylesUri = webview.asWebviewUri(vscode.Uri.joinPath(webviewPathOnDisk, 'index.css'));
 
@@ -21,7 +23,6 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
 </html>`;
 }
 
-
 export default class LogViewProvider implements vscode.WebviewViewProvider {
     private extensionUri: vscode.Uri;
     private webView?: vscode.Webview;
@@ -30,7 +31,7 @@ export default class LogViewProvider implements vscode.WebviewViewProvider {
         this.extensionUri = extensionUri;
     }
 
-    public postMessage(msg: any) {
+    public postMessage(msg: WebviewCommand) {
         this.webView?.postMessage(msg);
     }
 
@@ -38,9 +39,27 @@ export default class LogViewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.options = {
             enableScripts: true,
             localResourceRoots: [
-                vscode.Uri.joinPath(this.extensionUri, 'out', 'webview')
+                vscode.Uri.joinPath(this.extensionUri, 'dist', 'webview')
             ]
         };
+
+        webviewView.webview.onDidReceiveMessage((msg: ExtensionCommand) => {
+            switch (msg.action) {
+                case "ready":
+                    webviewView.webview.postMessage({
+                        action: "logPages:load",
+                        logPages: logPageManager.getLogPages()
+                    });
+                    break;
+                case 'logPage:process:terminate': {
+                    break;
+                }
+                case 'logPage:remove': {
+                    logPageManager.removeLogPage(msg.pageId);
+                }
+            }
+        });
+
         webviewView.webview.html = getWebviewContent(webviewView.webview, this.extensionUri);
 
         this.webView = webviewView.webview;

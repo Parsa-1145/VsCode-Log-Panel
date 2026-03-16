@@ -9,7 +9,7 @@ export default defineConfig({
   base: './',
   build: {
     // Output to the extension's 'out' directory
-    outDir: path.resolve(__dirname, '../out/webview'),
+    outDir: path.resolve(__dirname, '../dist/webview'),
     assetsInlineLimit: 0,
     emptyOutDir: true,
     rollupOptions: {

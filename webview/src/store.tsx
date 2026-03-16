@@ -1,103 +1,139 @@
-type LogLevel = "DEBUG" | "ERROR" | "INFO" | "WARNING"
-type Log = {
-  message: string,
-  time: string,
-  group: string,
-  level: LogLevel
+import type { Log, LogPage, ProcessDetails } from "@logz/shared"
+import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from "react"
+
+type ProcessesAction =
+  | { type: "logPages:add"; logPage: LogPage }
+  | { type: "logPages:select"; logPageId: string }
+  | { type: "logPages:remove"; id: string }
+  | { type: "logPage:addLogs"; id: string, logs: Log[] }
+  | { type: "logPages:load"; logPages: Record<string, LogPage> }
+  | { type: "logPage:process:update"; id: string, patch: Partial<ProcessDetails> }
+  ;
+
+type LogPageContextState = {
+  pages: Record<string, LogPage>;
+  selectedPageId?: string;
+};
+
+type LogPageContextType = {
+  state: LogPageContextState;
+  dispatch: Dispatch<ProcessesAction>;
+};
+
+const LogPageContext = createContext<LogPageContextType | undefined>(undefined);
+
+function logPageReducer(
+  state: LogPageContextState,
+  action: ProcessesAction
+): LogPageContextState {
+  switch (action.type) {
+    case "logPages:add": {
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [action.logPage.id]: action.logPage
+        }
+      };
+    }
+
+    case "logPages:load": {
+      return {
+        ...state,
+        pages: action.logPages
+      };
+    }
+
+    case "logPages:remove": {
+      const newProcesses = { ...state.pages };
+      delete newProcesses[action.id];
+
+      let selectedPageId = state.selectedPageId
+      if (state.selectedPageId == action.id) {
+        selectedPageId = undefined;
+      }
+      return {
+        ...state,
+        pages: newProcesses,
+        selectedPageId: selectedPageId
+      };
+    }
+
+    case "logPages:select": {
+      return {
+        ...state,
+        selectedPageId: action.logPageId
+      };
+    }
+
+    case "logPage:addLogs": {
+      const pageToUpdate = state.pages[action.id];
+      if (!pageToUpdate) {
+        return state;
+      }
+
+      const updatedLogs = [...pageToUpdate.logs, ...action.logs];
+
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [action.id]: {
+            ...pageToUpdate,
+            logs: updatedLogs,
+          },
+        }
+      };
+    }
+
+    case "logPage:process:update": {
+      const pageToUpdate = state.pages[action.id];
+      if ((!pageToUpdate) || pageToUpdate.details.type != "PROCESS") {
+        return state;
+      }
+
+      const details = pageToUpdate.details;
+      const newProcessDetails = {...details.processDetails, ...action.patch}
+
+      console.log(newProcessDetails)
+
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [action.id]: {
+            ...pageToUpdate,
+            details: {
+              ...details,
+              processDetails: {
+                ...newProcessDetails,
+              }
+            }
+          },
+        }
+      };
+    }
+
+    default:
+      return state;
+  }
 }
 
+export function LogPageProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(logPageReducer, { pages: {} });
 
-const logs: Log[] = [
-  {
-    message: "Server started on port 3000",
-    time: "10:00:01",
-    group: "server",
-    level: "INFO"
-  },
-  {
-    message: "Connected to PostgreSQL database",
-    time: "10:00:03",
-    group: "database",
-    level: "INFO"
-  },
-  {
-    message: "User authentication request received",
-    time: "10:01:10",
-    group: "auth",
-    level: "DEBUG"
-  },
-  {
-    message: "Token validation succeeded for user id=4821",
-    time: "10:01:11",
-    group: "auth",
-    level: "WARNING"
-  },
-  {
-    message: "Fetching user profile from database",
-    time: "10:01:11",
-    group: "database",
-    level: "DEBUG"
-  },
-  {
-    message: "Unhandled exception while processing request\nError: Cannot read properties of undefined (reading 'id')\n    at UserService.getProfile (/src/services/user.ts:42:18)\n    at processRequest (/src/server.ts:88:12)",
-    time: "10:02:34",
-    group: "server",
-    level: "ERROR"
-  },
-  {
-    message: "Retrying database connection...",
-    time: "10:02:36",
-    group: "database",
-    level: "INFO"
-  },
-  {
-    message: "Database connection restored successfully",
-    time: "10:02:37",
-    group: "database",
-    level: "INFO"
-  },
-  {
-    message: "Incoming HTTP request\nMethod: GET\nRoute: /api/projects\nClient: 127.0.0.1",
-    time: "10:03:12",
-    group: "http",
-    level: "INFO"
-  },
-  {
-    message: "Cache miss for key: projects:list",
-    time: "10:03:12",
-    group: "cache",
-    level: "DEBUG"
-  },
-  {
-    message: "Projects loaded from database (count=24)",
-    time: "10:03:13",
-    group: "database",
-    level: "INFO"
-  },
-  {
-    message: "Cache updated for key: projects:list (ttl=300s)",
-    time: "10:03:13",
-    group: "cache",
-    level: "DEBUG"
-  },
-  {
-    message: "Worker job started\nJob: cleanup-temp-files\nSchedule: */5 * * * *",
-    time: "10:05:00",
-    group: "worker",
-    level: "INFO"
-  },
-  {
-    message: "Deleted temporary files\nCount: 17\nFreed space: 42MB",
-    time: "10:05:01",
-    group: "worker",
-    level: "INFO"
-  },
-  {
-    message: "Memory usage warning\nHeap Used: 812MB\nHeap Limit: 1024MB\nRecommendation: investigate memory leak",
-    time: "10:06:22",
-    group: "monitor",
-    level: "ERROR"
+  return (
+    <LogPageContext.Provider value={{ state, dispatch }}>
+      {children}
+    </LogPageContext.Provider>
+  );
+}
+
+export function useLogPages() {
+  const ctx = useContext(LogPageContext);
+  if (!ctx) {
+    throw new Error("useProcesses must be used within a ProcessesProvider");
   }
-]
+  return ctx;
+}
 
-export {type Log, type LogLevel, logs};

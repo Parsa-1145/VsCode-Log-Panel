@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "Node16",
+        "target": "ES2022",
+        "lib": ["ES2022"],
+        "sourceMap": true,
+        "strict": true,
+        "outDir": "../dist/extension/",
+        "types": ["node", "vscode"],
+        
+        "esModuleInterop": true,
+        "skipLibCheck": true
+    },
+    "include": ["./src"]
+}
