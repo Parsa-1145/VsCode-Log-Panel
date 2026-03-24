@@ -1,6 +1,6 @@
-import { ExtensionCommand, LogPage, WebviewCommand } from '@logz/shared';
+import { ExtensionCommand, WebviewCommand } from '@logPanelz/shared';
 import * as vscode from 'vscode';
-import { logPageManager } from './common';
+import { logPageManager } from './logPageManager';
 
 function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): string {
     const webviewPathOnDisk = vscode.Uri.joinPath(extensionUri, 'dist', 'webview');
@@ -52,10 +52,17 @@ export default class LogViewProvider implements vscode.WebviewViewProvider {
                     });
                     break;
                 case 'logPage:process:terminate': {
+                    logPageManager.terminateProcess(msg.pageId);
+                    break;
+                }
+                case 'logPage:process:restart': {
+                    // logPageManager .(msg.pageId);
+                    vscode.window.showInformationMessage("not implemented!")
                     break;
                 }
                 case 'logPage:remove': {
                     logPageManager.removeLogPage(msg.pageId);
+                    break;
                 }
             }
         });

@@ -1,13 +1,13 @@
-import type { Log, LogPage, ProcessDetails } from "@logz/shared"
+import type { Log, LogPage, TaskDetails } from "@logPanelz/shared"
 import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from "react"
 
 type ProcessesAction =
-  | { type: "logPages:add"; logPage: LogPage }
+  | { type: "logPages:add"; logPage: LogPage, focus?: boolean }
   | { type: "logPages:select"; logPageId: string }
   | { type: "logPages:remove"; id: string }
   | { type: "logPage:addLogs"; id: string, logs: Log[] }
   | { type: "logPages:load"; logPages: Record<string, LogPage> }
-  | { type: "logPage:process:update"; id: string, patch: Partial<ProcessDetails> }
+  | { type: "logPage:process:update"; id: string, patch: Partial<TaskDetails> }
   ;
 
 type LogPageContextState = {
@@ -28,8 +28,13 @@ function logPageReducer(
 ): LogPageContextState {
   switch (action.type) {
     case "logPages:add": {
+      let selection = state.selectedPageId;
+      if (action.focus) {
+        selection = action.logPage.id;
+      }
       return {
         ...state,
+        selectedPageId: selection,
         pages: {
           ...state.pages,
           [action.logPage.id]: action.logPage
@@ -38,8 +43,21 @@ function logPageReducer(
     }
 
     case "logPages:load": {
+      let selection = state.selectedPageId;
+      if (!selection) {
+        const pages = Object.values(action.logPages)
+
+        const runningTaskPage = pages.find(p => p.details.type == "TASK" && p.details.taskDetails.status == "RUNNING")
+
+        selection = pages[0]?.id
+        if (runningTaskPage) {
+          selection = runningTaskPage.id
+        }
+      }
+      
       return {
         ...state,
+        selectedPageId: selection,
         pages: action.logPages
       };
     }
@@ -88,14 +106,12 @@ function logPageReducer(
 
     case "logPage:process:update": {
       const pageToUpdate = state.pages[action.id];
-      if ((!pageToUpdate) || pageToUpdate.details.type != "PROCESS") {
+      if ((!pageToUpdate) || pageToUpdate.details.type != "TASK") {
         return state;
       }
 
       const details = pageToUpdate.details;
-      const newProcessDetails = {...details.processDetails, ...action.patch}
-
-      console.log(newProcessDetails)
+      const newProcessDetails = { ...details.taskDetails, ...action.patch }
 
       return {
         ...state,
@@ -105,7 +121,7 @@ function logPageReducer(
             ...pageToUpdate,
             details: {
               ...details,
-              processDetails: {
+              taskDetails: {
                 ...newProcessDetails,
               }
             }

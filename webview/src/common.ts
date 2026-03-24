@@ -1,4 +1,4 @@
-import type { LogLevel } from "@logz/shared";
+import type { LogLevel } from "@logPanelz/shared";
 
 export const logColors: Record<LogLevel, string> = {
     DEBUG: "--vscode-debugConsole-infoForeground",

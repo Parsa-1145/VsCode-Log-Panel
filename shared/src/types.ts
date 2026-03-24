@@ -8,18 +8,18 @@ export type Log = {
   seen?: boolean
 }
 
-export type ProcessStatus = "RUNNING" | "ENDED"
+export type TaskStatus = "RUNNING" | "ENDED"
 
-export type ProcessDetails = {
-  pid: string,
+export type TaskDetails = {
   command: string,
-  status: ProcessStatus
+  taskName: string,
+  status: TaskStatus
 }
 
 export type LogPageDetails =
   | {
-    type: "PROCESS",
-    processDetails: ProcessDetails
+    type: "TASK",
+    taskDetails: TaskDetails
   }
   | {
     type: "SOCKET",
@@ -39,10 +39,11 @@ export type LogPage = {
 export type WebviewCommand =
   | { action: "logPage:addLogs", logs: Log[], pageId: string }
   | { action: "logPages:add", logPage: LogPage }
-  | { action: "logPage:process:update", pageId: string, patch: Partial<ProcessDetails>}
+  | { action: "logPage:process:update", pageId: string, patch: Partial<TaskDetails>}
   | { action: "logPages:load", logPages: Record<string, LogPage> };
 
 export type ExtensionCommand =
   | { "action": "logPage:process:terminate", "pageId": string }
+  | { "action": "logPage:process:restart", "pageId": string }
   | { "action": "logPage:remove", "pageId": string }
   | { "action": "ready" }

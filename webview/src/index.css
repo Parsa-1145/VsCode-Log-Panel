@@ -40,15 +40,19 @@
 .codicon-terminal::before {
     content: "\ea85"
 }
+
 .codicon-trash::before {
     content: "\ea81"
 }
+
 .codicon-pass::before {
     content: "\eba4"
 }
+
 .codicon-terminal-kill::before {
     content: "\ea81"
 }
+
 .codicon-warning::before {
     content: "\ea6c";
 }
@@ -60,8 +64,14 @@
 .codicon-info:before {
     content: "\ea74"
 }
-.codicon-debug-stop:before { content: "\ead7" }
-.codicon-refresh:before { content: "\eb37" }
+
+.codicon-debug-stop:before {
+    content: "\ead7"
+}
+
+.codicon-refresh:before {
+    content: "\eb37"
+}
 
 .log-hover-debug:hover {
     background: color-mix(in srgb, var(--vscode-debugConsole-infoForeground) 12%, transparent);
@@ -101,17 +111,18 @@
 .log-page-tabs .log-page-tabs-row.selected::before {
     content: "";
     position: absolute;
-    left: 0;
+    left: 0px;
     top: 0;
     bottom: 0;
     width: 1px;
     background-color: var(--vscode-terminal-tab-activeBorder, var(--vscode-focusBorder));
 }
 
-.log-page-tabs { 
+.log-page-tabs {
     width: 100%;
-    overflow-x: hidden;
+
 }
+
 .log-page-tabs .log-page-tabs-row {
     position: relative;
     height: 22px;
@@ -130,20 +141,24 @@
 .log-page-tabs .log-page-tabs-row .label-icon .codicon {
     vertical-align: text-bottom;
     margin-right: 0.25rem;
-    min-width: 0; 
+    min-width: 0;
 }
+
 .log-page-tabs .log-page-tabs-row .label-icon {
-    min-width: 0;              /* CRITICAL */
+    min-width: 0;
+    /* CRITICAL */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     flex: 1 1 auto;
 }
+
 .log-page-tabs .log-page-tabs-row:hover .page-actions {
     display: flex;
     flex-direction: row;
     gap: 0;
 }
+
 .log-page-tabs .log-page-tabs-row .page-actions {
     height: 22px;
     display: none;
@@ -153,13 +168,16 @@
     padding: 1px;
     box-sizing: border-box;
 }
-.log-page-tabs-row .page-actions .page-action{
+
+.log-page-tabs-row .page-actions .page-action {
     border-radius: 5px;
     padding: 2px;
 }
-.log-page-tabs-row .page-actions .page-action:hover{
+
+.log-page-tabs-row .page-actions .page-action:hover {
     background: var(--vscode-toolbar-hoverBackground);
 }
+
 .log-page-tabs:focus .log-page-tabs-row.selected {
     background-color: var(--vscode-list-activeSelectionBackground);
 }
@@ -223,4 +241,43 @@
 
 .log-page-tabs .log-page-tabs-row:not(.focused):not(.selected):hover {
     background-color: var(--vscode-list-hoverBackground);
+}
+
+[data-separator] {
+  position: relative;
+  border-right: 1px solid var(--vscode-panel-border);
+  outline: none;
+}
+
+[data-separator]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -2px;
+    width: 4px;
+    height: 100%;
+    background: var(--vscode-sash-hoverBorder);
+}
+[data-separator="inactive"]::before {
+    opacity: 0;
+    transition: opacity 0.2s 0s;
+}
+@keyframes fadeIn {
+  0%      { opacity: 0; }
+  71.43%  { opacity: 0; }
+  100%    { opacity: 1; }
+}
+
+[data-separator="hover"]::before {
+  animation: fadeIn 0.7s forwards;
+}
+[data-separator="active"]::before {
+    opacity: 1;
+    transition: opacity 0.2s 0s;
+}
+
+[data-panel]:not(:first-child) {
+    /* border-left: 1px solid var(--vscode-panel-border) !important; */
+    box-sizing: border-box !important;
+    overflow: visible !important;
 }

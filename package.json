@@ -1,7 +1,7 @@
 {
-  "name": "logz-panel",
-  "displayName": "LogZ Panel",
-  "description": "Adds a panel to view logz logs",
+  "name": "log-panelz",
+  "displayName": "Log PanelZ",
+  "description": "Adds a panel to view logz",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.103.0"
@@ -16,14 +16,14 @@
   "contributes": {
     "taskDefinitions": [
       {
-        "type": "logz-wrapper",
+        "type": "log-panel-wrapper",
         "required": [
-          "wrappedTask"
+          "unixCommand"
         ],
         "properties": {
-          "wrappedTask": {
+          "unixCommand": {
             "type": "string",
-            "description": "Label of the task to wrap"
+            "description": "the unix shell command"
           }
         }
       }
@@ -31,17 +31,17 @@
     "viewsContainers": {
       "panel": [
         {
-          "id": "logzPanel",
+          "id": "logPanel",
           "title": "Logs",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "logzPanel": [
+      "logPanel": [
         {
-          "id": "logzPanelView",
-          "name": "Log Stream",
+          "id": "logPanelView",
+          "name": "Logs2",
           "type": "webview"
         }
       ]

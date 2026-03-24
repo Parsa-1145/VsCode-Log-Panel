@@ -1,4 +1,4 @@
-import type { LogPage } from "@logz/shared";
+import type { LogPage } from "@logPanelz/shared";
 import { useLogPages } from "./store";
 import type { ReactNode } from "react";
 import vscode from "./vscode";
@@ -17,6 +17,16 @@ export default function LogPageList() {
             case "DELETE": {
                 vscode.postMessage({ action: "logPage:remove", pageId: logPageId })
                 dispatch({ type: "logPages:remove", id: logPageId })
+                break;
+            }
+            case 'TERMINATE': {
+                vscode.postMessage({ action: "logPage:process:terminate", pageId: logPageId })
+                dispatch({ type: "logPage:process:update", id: logPageId, patch: {status: "ENDED"} });
+                break;
+            }
+            case 'RESTART': {
+                vscode.postMessage({ action: "logPage:process:restart", pageId: logPageId })
+                // dispatch({ type: "logPage:process:update", id: logPageId, patch: {status: "ENDED"} });
                 break;
             }
         }
@@ -40,8 +50,8 @@ function LogPageRow({ logPage, onSelect, selected }: { logPage: LogPage, onSelec
     let details = <></>
     let actions: ReactNode[] = []
 
-    if (logPage.details.type == "PROCESS") {
-        if (logPage.details.processDetails.status == "ENDED") {
+    if (logPage.details.type == "TASK") {
+        if (logPage.details.taskDetails.status == "RUNNING") {
             details = <span className="codicon codicon-loading" />
             actions.push(
                 <div className="page-action" onClick={e => handleClick(e, "TERMINATE")}>

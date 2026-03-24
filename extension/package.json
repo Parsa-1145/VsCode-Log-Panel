@@ -7,7 +7,7 @@
         "lint": "eslint src"
     },
     "devDependencies": {
-        "@logz/shared": "*",
+        "@logPanelz/shared": "*",
         "@types/mocha": "^10.0.10",
         "@types/node": "22.x",
         "@types/vscode": "^1.103.0",
@@ -16,6 +16,7 @@
         "esbuild": "^0.27.1"
     },
     "dependencies": {
-        "strip-ansi": "^6.0.1"
+        "strip-ansi": "^6.0.1",
+        "tree-kill": "^1.2.2"
     }
 }

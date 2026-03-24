@@ -1,4 +1,4 @@
-import type { ExtensionCommand } from "@logz/shared";
+import type { ExtensionCommand } from "@logPanelz/shared";
 
 declare const acquireVsCodeApi: () => {
   postMessage: (msg: ExtensionCommand) => void;

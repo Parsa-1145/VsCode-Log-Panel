@@ -1,4 +1,4 @@
-import type { Log } from "@logz/shared"
+import type { Log } from "@logPanelz/shared"
 import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react"
 import { logColors } from "./common"
 
