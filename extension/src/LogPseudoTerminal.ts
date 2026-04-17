@@ -44,6 +44,9 @@ export class LogPseudoTerminal implements vscode.Pseudoterminal {
 
             const logs = this.logParser.parseLogs(chunk);
             logPage.logs.push(...logs);
+            if(logPage.logs.length > 1000){
+                logPage.logs = logPage.logs.slice(-1000);
+            }
             if (logs.length) {
                 this.logView.postMessage({
                     action: "logPage:addLogs",
@@ -59,7 +62,7 @@ export class LogPseudoTerminal implements vscode.Pseudoterminal {
                 logPage.details.taskDetails.status = "ENDED";
             }
             this.writeEmitter.fire(`\r\nProcess exited with code ${code}\r\n`);
-            this.closeEmitter.fire(1);
+            this.closeEmitter.fire(code??0);
         });
     }
 

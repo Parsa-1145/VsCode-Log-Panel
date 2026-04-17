@@ -24,7 +24,6 @@ export default class LogzWrapTaskProvider implements vscode.TaskProvider {
                 return new LogPseudoTerminal(_task, this.logView);
             })
         );
-        task.isBackground = true;
 
         return task;
     }
